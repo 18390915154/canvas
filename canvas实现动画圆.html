@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas实现动画圆</title>
+	</head>
+	<style>
+		*{margin: 0;padding: 0;}
+		#myCanvas{display: block;}
+	</style>
+	<body>		
+		<canvas id="myCanvas"></canvas>
+	</body>
+</html>
+<script type="text/javascript">
+	var canvas=document.querySelector('#myCanvas');
+	var oCan=canvas.getContext('2d');
+	var w,h,coloArray=['#FFFFCC','#CCFFFF','#CCCC99','#CCCCFF','CCCCCC','#FF6666'],aBubble=[];
+	~~function method(){			//函数自运行~~function(){}()=function(){}()
+		window.onresize=arguments.callee; //callee 是 arguments 对象的一个属性。它可以用于引用该函数的函数体内当前正在执行的函数。这在函数的名称是未知时很有用，例如在没有名称的函数表达式 (也称为“匿名函数”)内。
+		w=window.innerWidth;
+		h=window.innerHeight;
+		canvas.width=w;
+		canvas.height=h;
+	}()
+	function Bubble(){};		//构造函数
+	Bubble.prototype={
+		init:function(){		//设置圆对应的参数
+			this.x=random(0,w);
+			this.y=random(0,h);
+			this.r=random(1,6);
+			this.color=coloArray[Math.floor(random(0,6))];
+			this.VX=random(-1,1);
+			this.VY=random(-1,1);
+		},
+		draw:function(){		//绘制圆
+			oCan.beginPath();
+			oCan.fillStyle=this.color;
+			oCan.arc(this.x,this.y,this.r,0,Math.PI*2);
+			oCan.fill();
+		},
+		move:function(){	//圆移动的距离
+			this.x+=this.VX;
+			this.y+=this.VY;
+			if(this.x-this.r<0 || this.x+this.r*2>w){
+				this.VX=-this.VX
+			};
+			if(this.y-this.r<0 || this.y+this.r*2>h){
+				this.VY=-this.VY
+			};
+			this.draw();
+		}
+	};
+	function random(min,max){	//返回一个最小值与最大值之间的值
+		return Math.random()*(max-min)+min;
+	}
+	function create(num){
+		for(var i=0;i<num;i++){
+			var bubble=new Bubble();		//实例
+			bubble.init();
+			bubble.draw(); 
+			aBubble.push(bubble);		//每次生成新球都放进数组
+		}
+	};
+	create(1000);
+	setInterval(function(){
+		oCan.clearRect(0,0,w,h);	//清除之前生成的圆
+		for(var item of aBubble){	//for of变指的是数组里面每一个元素      for in指的是数组里面的每一个元素的下标
+			item.move();
+		}
+	},1000/60)
+</script>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>画布</title>
+	</head>
+	<style>
+		*{margin: 0;padding: 0;}
+		#myCanvas{background-color: blue;display: block;}
+	</style>
+	<body>		
+		<canvas id="myCanvas">your browser does not support the canvas tag </canvas>
+	</body>
+</html>
+<script type="text/javascript">
+	var canvas=document.querySelector('#myCanvas');
+	var w,h;
+	~~function method(){			//函数自运行~~function(){}()=function(){}()
+		window.onresize=arguments.callee; //callee 是 arguments 对象的一个属性。它可以用于引用该函数的函数体内当前正在执行的函数。这在函数的名称是未知时很有用，例如在没有名称的函数表达式 (也称为“匿名函数”)内。
+		w=window.innerWidth;
+		h=window.innerHeight;
+		canvas.width=w;
+		canvas.height=h;
+	}()
+	//一道面试题。接受参数n=5,不用for循环输出数组【1,2,3,4,5】
+	function show(n) {
+	    var arr = [];
+	    return (function () {
+	        arr.unshift(n);		//unshift把一个元素添加到数组的开头，并返回数组的新长度
+	        n--;
+	        if (n != 0) {
+	            arguments.callee();
+	        }
+	        return arr;
+	    })()
+	}
+	var index=show(5)//[1,2,3,4,5]
+	console.log(index);
+	//canvas实现圆
+	var oCan=canvas.getContext('2d');
+	oCan.beginPath();		//开始绘制
+	oCan.clearRect(0,0,w,h);	//清除指定区域
+	oCan.fillStyle='red';
+	oCan.arc(200,200,50,0,Math.PI*2);				//x轴，y轴，半径，起始位置，终点位置（单位为弧度）
+	oCan.fill();
+	
+</script>
