@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+		*{margin: 0;padding: 0;}
+		#canvas{display: block;}
+	</style>
+	<body>
+		<canvas id="canvas"></canvas>
+	</body>
+</html>
+<script type="text/javascript">
+	var canvas=document.querySelector('#canvas');
+	canvas.width=window.innerWidth;
+	canvas.height=window.innerHeight;
+	var oCan=canvas.getContext('2d');		//this 指向对象Canvas.animate
+	var color=oCan.createLinearGradient(100,200,200,200);		
+	color.addColorStop(0,'yellow');
+	color.addColorStop(0.5,'red');
+	color.addColorStop(1,'#0066cc');
+	
+	oCan.save();	//保存路径
+	oCan.strokeStyle=color;		//填充颜色
+	oCan.beginPath();		
+	oCan.moveTo(100,200);		//起点
+	oCan.lineTo(200,200);		//终点
+	
+	
+	
+	oCan.closePath();
+	oCan.stroke();     //填充事件
+	oCan.restore();     //释放路径
+	
+	
+</script>
