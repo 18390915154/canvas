@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+		*{margin: 0;padding: 0;}
+		#canvas{background-color:#333 ;display: block;}
+	</style>
+	<body>
+		<canvas id="canvas"></canvas>
+	</body>
+</html>
+<script type="text/javascript">
+	
+	
+	
+	
+	
+	var Canvas={};		//空间函数
+	Canvas.animate={
+		//实例化
+		init:function(){
+			var canvas=document.querySelector('#canvas');
+			canvas.width=window.innerWidth;
+			canvas.height=window.innerHeight;
+			this.oCan=canvas.getContext('2d');		//this 指向对象Canvas.animate
+			this.cw=canvas.width;
+			this.ch=canvas.height;
+			this.num=200;		//粒子数量
+			this.data={};		//储存粒子数量
+			for(var i=0;i<this.num;i++){
+				this.data[i]={
+					//随机位置
+					x:Math.random()*this.cw,
+					y:Math.random()*this.ch, 
+					//随机牵引量x,y
+					cX:Math.random()*2-0.2,
+					cY:Math.random()*2-0.2
+				}
+				this.drawCircle(this.data[i].x,this.data[i].y);
+			}
+		},
+		drawCircle:function(x,y){		//绘制圆
+			var oCan=this.oCan;
+			oCan.save();	//保存路径
+			oCan.beginPath();		
+			oCan.fillStyle='pink';		//填充颜色
+			oCan.arc(x,y,0.5,0,Math.PI*2,true);
+			//oCan.fillRect(100,100,300,100);     //矩形	
+			oCan.closePath();
+			oCan.fill();     //填充事件
+			oCan.restore();     //释放路径
+		},
+		drawLine:function(x1,y1,x2,y2){		//绘制线
+			var oCan=this.oCan;
+			var color=oCan.createLinearGradient(x1,y1,x2,y2);		
+			color.addColorStop(0,'#fff');
+			//color.addColorStop(0.5,'red');
+			color.addColorStop(1,'#333');
+			
+			oCan.save();	//保存路径
+			oCan.strokeStyle=color;		//填充颜色
+			oCan.beginPath();		
+			oCan.moveTo(x1,y1);		//起点
+			oCan.lineTo(x2,y2);		//终点
+			
+			oCan.closePath();
+			oCan.stroke();     //填充事件
+			oCan.restore();     //释放路径
+		},
+		moveCircle:function(){
+			var self=this;
+			self.oCan.clearRect(0,0,this.cw,this.ch);
+			for(var i=0;i<self.num;i++){		//当前点
+				self.data[i].x+=self.data[i].cX;
+				self.data[i].y+=self.data[i].cY;
+				//边界值判断
+				if(self.data[i].x<0 || self.data[i].x>this.cw){
+					self.data[i].cX=-self.data[i].cX;
+				};
+				if(self.data[i].y<0 || self.data[i].y>this.ch){
+					self.data[i].cY=-self.data[i].cY;
+				}
+				//不断地画圆
+				self.drawCircle(self.data[i].x,self.data[i].y);
+				//用勾股定理来判断是否连线
+				for(var j=i+1;j<self.num;j++){
+					if(Math.pow(self.data[i].x-self.data[j].x,2)+Math.pow(self.data[i].y-self.data[j].y,2)<=80*80){
+						this.drawLine(self.data[i].x,self.data[i].y,self.data[j].x,self.data[j].y)
+					}
+				}
+			}
+		}
+	}
+	Canvas.animate.init();
+	Canvas.animate.moveCircle();
+	setInterval(function(){
+		Canvas.animate.moveCircle();
+	},50)
+</script>
